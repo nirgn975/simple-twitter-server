@@ -2,12 +2,14 @@ import * as express from "express";
 import * as chalk from "chalk";
 
 import { App } from "./app";
+import Config from "./util/config";
 
 /**
  * @class Server
  */
 export class Server {
   public app: express.Application;
+  public config: any;
 
   /**
    * @class Api
@@ -25,6 +27,7 @@ export class Server {
     });
 
     this.app = new App().app;
+    this.config = new Config();
     this.configurExpress();
   }
 
@@ -36,7 +39,7 @@ export class Server {
    * @return void
    */
   private configurExpress() {
-    this.app.set("port", "8080");
+    this.app.set("port", this.config.config.port);
 
     if (!module.parent) {
       this.app.listen(this.app.get("port"), () => {

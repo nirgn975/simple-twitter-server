@@ -24,11 +24,12 @@ Create a `.env` file at the root directory (this file should not be commit).
 
 Here is an example of the `.env` file:
 ```
-MONGODB_URI=mongodb://localhost/simpletwitter
+DATABASE_URI=mongodb://localhost/simpletwitter
 JWT=SIMTWITT
-PORT=4000
+REFRESHJWT=RESIMTWITT
+PORT=8080
 LOG_LEVEL=info
-NODE_ENV=test
+NODE_ENV=dev
 ```
 
 ## Tests
