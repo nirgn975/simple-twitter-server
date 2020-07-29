@@ -1,7 +1,9 @@
+import * as mongoose from "mongoose";
 import * as express from "express";
 import * as chalk from "chalk";
 
 import { App } from "./app";
+import Seed from "./util/seed";
 import Config from "./util/config";
 
 /**
@@ -28,7 +30,34 @@ export class Server {
 
     this.app = new App().app;
     this.config = new Config();
+    this.connectMongoDB();
     this.configurExpress();
+  }
+
+  /**
+   * Connect to MongoDB.
+   *
+   * @class Server
+   * @method connectMongoDB
+   * @return void
+   */
+  private async connectMongoDB() {
+    await mongoose.connect(this.config.config.db, {
+      useCreateIndex: true,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      promiseLibrary: global.Promise,
+    } as mongoose.ConnectionOptions);
+
+    await mongoose.connection.on("error", (error: any) => {
+      console.error(`MongoDB connection error. Please make sure MongoDB is running. ${error}`);
+      process.exit(1);
+    });
+
+    if (this.config.config.seed) {
+      const seed = new Seed();
+      seed.seeding();
+    }
   }
 
   /**
