@@ -3,6 +3,8 @@ import * as morgan from "morgan";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 
+import * as userRoutes from "./api/user/userRoutes";
+
 const router: express.Router = express.Router();
 
 /**
@@ -43,6 +45,7 @@ export class App {
    * @return void
    */
   private configureRoutes() {
+    this.app.use("/user", userRoutes.default);
     this.app.use("/", (_, res) => res.send("app is working!!!"));
   }
 }
