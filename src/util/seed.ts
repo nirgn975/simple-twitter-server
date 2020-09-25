@@ -2,6 +2,10 @@ import * as _ from "lodash";
 import * as chalk from "chalk";
 import * as mongoose from "mongoose";
 
+import users from "./dummyData/users";
+import { User } from "../api/user/userModel";
+
+
 /**
  * @class Seed
  */
@@ -20,12 +24,12 @@ export default class Seed {
    * @method seeding
    * @return void
    */
-  public seeding() {
+  public async seeding() {
     console.log(chalk.yellow("💦 Cleaning the DB 💦"));
-    this.cleanDB()
-      .then(this.createUsers);
+    await this.cleanDB()
+    const users = await this.createUsers();
 
-    console.log(chalk.yellow(`Seeded DB with`));
+    console.log(chalk.yellow(`Seeded DB with ${users.length} users`));
     console.log(chalk.yellow("🎉 Finish seeding the DB 🎉"));
   }
 
@@ -49,8 +53,11 @@ export default class Seed {
    *
    * @class Seed
    * @method createUsers
-   * @return promise
+   * @return void
    */
-  private createUsers(data) {
+  private createUsers() {
+    return Promise.all(users.map(user => {
+      return new User(user).save();
+    }));
   }
 }
