@@ -14,6 +14,7 @@ export interface IUserModel extends Document {
   country: string;
   website: string;
   birthday: Date;
+  comparePassword: (candidatePassword: string) => boolean;
 }
 
 const schema = new Schema({
@@ -60,15 +61,18 @@ const schema = new Schema({
 /**
  * Password hash middleware.
  */
-schema.pre("save", function(next: NextFunction) {
+schema.pre<IUserModel>("save", function(next: NextFunction) {
   if (!this.isModified("password")) return next();
   const salt = bcrypt.genSaltSync(10);
   this.password = bcrypt.hashSync(this.password, salt);
   next();
 });
 
-export const User = model<IUserModel>("user", schema, "users", true);
-
+/**
+ * Add comparePassword method to schema.
+ */
 schema.methods.comparePassword = async (candidatePassword: string, userPassword: string): Promise<boolean> => {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
+
+export const User = model<IUserModel>("user", schema, "users", true);

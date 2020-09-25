@@ -1,24 +1,12 @@
 import { Router } from "express";
 import {
-  usernameParam, getOwnFeed, getUserInfo, getFollowersList, getFollowingList, followUser, unfollowUser, resetOwnPassword,
-  changeOwnPassword, changeOwnSettings, createUser, editMyInfo, deleteMe,
+  usernameParam, getUserInfo, getOwnFeed, resetOwnPassword, changeOwnPassword, getOwnSettings,
+  changeOwnSettings, createUser, editMyInfo, deleteMe,
 } from "./userController";
 
 const router: Router = Router();
 
 router.param("username", usernameParam);
-
-router.route("/followers/:username")
-  .get(getFollowersList);
-
-router.route("/following/:username")
-  .get(getFollowingList);
-
-router.route("/follow/:username")
-  .post(followUser);
-
-router.route("/unfollow/:username")
-  .post(unfollowUser);
 
 router.route("/:username")
   .get(getUserInfo);
@@ -29,10 +17,13 @@ router.route("/feed")
 router.route("/reset-password")
   .post(resetOwnPassword);
 
-router.route("/password")
+router.route("/change-password")
   .put(changeOwnPassword);
 
 router.route("/settings")
+  .get(getOwnSettings);
+
+router.route("/change-settings")
   .put(changeOwnSettings);
 
 router.route("/")
